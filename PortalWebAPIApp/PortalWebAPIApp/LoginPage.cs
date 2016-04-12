@@ -85,15 +85,22 @@ namespace PortalWebAPIApp
         {
             AccountsService aService = new AccountsService();
             var tokenResponseTask = aService.Login(entryUserName.Text, entryPassword.Text);
-            var tokenResponse = tokenResponseTask.Result;
-            //App.SaveToken(tokenResponse.AccessToken);
-            App.SaveTokenResponseModel(tokenResponse);
-            DependencyService.Get<ILoginStoreService>().SaveLogin(tokenResponse);
-            if (LoggedIn != null)
+            try
             {
-                LoggedIn(sender, tokenResponse);
+                var tokenResponse = tokenResponseTask.Result;
+                //App.SaveToken(tokenResponse.AccessToken);
+                App.SaveTokenResponseModel(tokenResponse);
+                DependencyService.Get<ILoginStoreService>().SaveLogin(tokenResponse);
+                if (LoggedIn != null)
+                {
+                    LoggedIn(sender, tokenResponse);
+                }
+                App.SuccessfulLoginAction();
             }
-            App.SuccessfulLoginAction();
+            catch(Exception ex)
+            {
+
+            }
         }
     }
 }

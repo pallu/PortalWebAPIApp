@@ -27,10 +27,16 @@ namespace PortalWebAPIApp.services
                 });
 
                 var postResponse = await client.PostAsync(uri, formContent).ConfigureAwait(false);
-                postResponse.EnsureSuccessStatusCode();
-
-                string response = await postResponse.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<TokenResponseModel>(response);
+                //postResponse.EnsureSuccessStatusCode();
+                if (postResponse.IsSuccessStatusCode)
+                {
+                    string response = await postResponse.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<TokenResponseModel>(response);
+                }
+                else
+                {
+                    throw new WebException(postResponse.ReasonPhrase);
+                }
             }
             
 
@@ -47,10 +53,17 @@ namespace PortalWebAPIApp.services
                     new KeyValuePair<string, string>("refresh_token",refreshToken)
                 });
                 var postResponse = await client.PostAsync(uri, formContent).ConfigureAwait(false);
-                postResponse.EnsureSuccessStatusCode();
+                // postResponse.EnsureSuccessStatusCode();
 
-                string response = await postResponse.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<TokenResponseModel>(response);
+                if (postResponse.IsSuccessStatusCode)
+                {
+                    string response = await postResponse.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<TokenResponseModel>(response);
+                }
+                else
+                {
+                    throw new WebException(postResponse.ReasonPhrase);
+                }
             }
         }
 
