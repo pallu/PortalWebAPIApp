@@ -32,18 +32,7 @@ namespace PortalWebAPIApp.services
                 string response = await postResponse.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<TokenResponseModel>(response);
             }
-            //var client = new RestSharp.Portable.HttpClient.RestClient(Constants.BaseAddress);
-            //client.Authenticator = new RestSharp.Portable.Authenticators.HttpBasicAuthenticator(userName, password);
-
-            //var request = new RestSharp.Portable.RestRequest("/token", RestSharp.Portable.Method.POST);
-            //request.Parameters.Add(new RestSharp.Portable.Parameter() { Name = "grant_type", Value = "password" });
-            //request.Parameters.Add(new RestSharp.Portable.Parameter() { Name = "Username", Value = userName });
-            //request.Parameters.Add(new RestSharp.Portable.Parameter() { Name = "Password", Value = password });
-            //request.Parameters.Add(new RestSharp.Portable.Parameter() { Name = "client_id", Value = Constants.ClientID });
-
-            //var postResponse = await client.Execute<TokenResponseModel>(request).ConfigureAwait(false);
-            //return postResponse.Data;
-
+            
 
         }
 

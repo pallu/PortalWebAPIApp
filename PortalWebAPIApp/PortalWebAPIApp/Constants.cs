@@ -11,5 +11,6 @@ namespace PortalWebAPIApp
         //public const string BaseAddress = "http://localhost:63441"; // 
         public const string BaseAddress = "http://celgene.portalwebapicompanyx.tsgmeded.com";
         public const string ClientID = "ngAuthMobileApp";
+        public const string TokenResponseResult = "TokenResponseResult";
     }
 }

@@ -19,18 +19,20 @@ namespace PortalWebAPIApp.Droid
 {
     public class LoginStoreDroid : ILoginStoreService
     {
-        //public string GetPassword()
-        //{
+        Context context;
+        string serviceID;
+        public LoginStoreDroid()
+        {
+            context = Xamarin.Forms.Forms.Context;
+            serviceID = context.ApplicationInfo.LoadLabel(context.PackageManager);
             
-        //}
+        }
         public TokenResponseModel GetToken()
         {
             if (LoginExists())
             {
-                var context = Xamarin.Forms.Forms.Context;
-                string serviceID = context.ApplicationInfo.LoadLabel(context.PackageManager);
                 var account = AccountStore.Create(context).FindAccountsForService(serviceID).Last();
-                var str = account.Properties["TokenResponseResult"];
+                var str = account.Properties[Constants.TokenResponseResult];
                 return UtilityService.DeserializeJson<TokenResponseModel>(str);
             }
             else
@@ -40,11 +42,6 @@ namespace PortalWebAPIApp.Droid
         {
             if (LoginExists())
             {
-                //var context = Xamarin.Forms.Forms.Context;
-                //string serviceID = context.ApplicationInfo.LoadLabel(context.PackageManager);
-                //var account = AccountStore.Create(context).FindAccountsForService(serviceID).Last();
-                //var str = account.Properties["TokenResponseResult"];
-                //return UtilityService.DeserializeJson<TokenResponseModel>(str).UserName;
                 return GetToken().UserName;
             }
             else
@@ -53,8 +50,6 @@ namespace PortalWebAPIApp.Droid
 
         public bool LoginExists()
         {
-            var context = Xamarin.Forms.Forms.Context;
-            string serviceID = context.ApplicationInfo.LoadLabel(context.PackageManager);
             if (AccountStore.Create(context).FindAccountsForService(serviceID).Count() > 0)
                 return true;
             else
@@ -63,18 +58,9 @@ namespace PortalWebAPIApp.Droid
 
         public void SaveLogin(TokenResponseModel trm)
         {
-            var context = Xamarin.Forms.Forms.Context;
-            string serviceID = context.ApplicationInfo.LoadLabel(context.PackageManager);
             Account acc = new Account(trm.UserName);
-            acc.Properties.Add("TokenResponseResult", UtilityService.SerializeJson(trm));
+            acc.Properties.Add(Constants.TokenResponseResult, UtilityService.SerializeJson(trm));
             AccountStore.Create(context).Save(acc, serviceID);
-            //if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
-            //{
-            //    Account user = new Account { Username = userName };
-            //    user.Properties.Add("Key", password);
-            //    AccountStore.Create(MainActivity.Instance.BaseContext).Save(user, "Shribits");
-            //}
-           
         }
     }
 }
