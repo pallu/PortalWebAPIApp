@@ -17,6 +17,12 @@ namespace PortalWebAPIApp.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+
+            //
+            Xamarin.Forms.DependencyService.Register<Plugin.Toasts.ToastNotificatorImplementation>();
+            Plugin.Toasts.ToastNotificatorImplementation.Init(this);
+
+            //
             LoadApplication(new App());
         }
     }

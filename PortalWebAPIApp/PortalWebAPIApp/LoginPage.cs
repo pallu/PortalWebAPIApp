@@ -1,4 +1,5 @@
-﻿using PortalWebAPIApp.models;
+﻿using PortalWebAPIApp.helpers;
+using PortalWebAPIApp.models;
 using PortalWebAPIApp.services;
 using System;
 using System.Collections.Generic;
@@ -81,13 +82,14 @@ namespace PortalWebAPIApp
             };
         }
 
-        private void Button_Clicked(object sender, EventArgs e)
+        private async void Button_Clicked(object sender, EventArgs e)
         {
             AccountsService aService = new AccountsService();
-            var tokenResponseTask = aService.Login(entryUserName.Text, entryPassword.Text);
             try
             {
-                var tokenResponse = tokenResponseTask.Result;
+                var tokenResponseTask = await aService.Login(entryUserName.Text, entryPassword.Text);
+            
+                var tokenResponse = tokenResponseTask;// Result;
                 //App.SaveToken(tokenResponse.AccessToken);
                 App.SaveTokenResponseModel(tokenResponse);
                 DependencyService.Get<ILoginStoreService>().SaveLogin(tokenResponse);
@@ -99,8 +101,9 @@ namespace PortalWebAPIApp
             }
             catch(Exception ex)
             {
-
+                Utility.ShowToast(ex.Message);
             }
         }
+        
     }
 }
