@@ -35,6 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="APILib\Client\BaseRequest.cs" />
+    <Compile Include="APILib\Client\IBaseRequest.cs" />
     <Compile Include="App.cs" />
     <Compile Include="BaseContentPage.cs" />
     <Compile Include="Constants.cs" />

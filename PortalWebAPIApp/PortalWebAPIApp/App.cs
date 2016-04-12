@@ -1,4 +1,5 @@
-﻿using PortalWebAPIApp.services;
+﻿using PortalWebAPIApp.models;
+using PortalWebAPIApp.services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,18 +24,37 @@ namespace PortalWebAPIApp
 
         public static bool IsLoggedIn
         {
-            get { return !string.IsNullOrWhiteSpace(_Token); }
+            get { return !string.IsNullOrWhiteSpace(Token); }
         }
 
-        static string _Token;
+        //static string _Token;
         public static string Token
         {
-            get { return _Token; }
+            get {
+                if (TokenResponseModel != null)
+                    return TokenResponseModel.AccessToken;
+                else
+                    return null;
+                //return _Token;
+            }
         }
+        //public static void SaveToken(string token)
+        //{
+        //    _Token = token;
+        //}
 
-        public static void SaveToken(string token)
+        static TokenResponseModel _tokenResponseModel;
+        public static TokenResponseModel TokenResponseModel
         {
-            _Token = token;
+            get {
+                CheckRefresh();
+                return _tokenResponseModel;
+            }
+        }
+        public static void SaveTokenResponseModel(TokenResponseModel trm)
+        {
+            _tokenResponseModel = trm;
+            CheckRefresh();
         }
 
         public static Action SuccessfulLoginAction
@@ -73,7 +93,8 @@ namespace PortalWebAPIApp
             var trm = DependencyService.Get<ILoginStoreService>().GetToken();
             if(trm!=null)
             {
-                App.SaveToken(trm.AccessToken);
+                //App.SaveToken(trm.AccessToken);
+                App.SaveTokenResponseModel(trm);
             }
         }
 
@@ -85,6 +106,14 @@ namespace PortalWebAPIApp
         protected override void OnResume()
         {
             // Handle when your app resumes
+        }
+        private static void CheckRefresh()
+        {
+            if (_tokenResponseModel != null && _tokenResponseModel.ExpiresUTC.HasValue && (DateTime.Now.ToUniversalTime() > _tokenResponseModel.ExpiresUTC.Value))
+            {
+                var trmTask = new AccountsService().RefreshToken(_tokenResponseModel.RefreshToken);
+                _tokenResponseModel = trmTask.Result;
+            }
         }
     }
 }

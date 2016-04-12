@@ -35,7 +35,24 @@ namespace PortalWebAPIApp.services
             
 
         }
+        public async Task<TokenResponseModel> RefreshToken(string refreshToken)
+        {
+            Uri uri = new Uri(new Uri(Constants.BaseAddress), new Uri("/token", UriKind.Relative));
+            using (var client = new HttpClient())
+            {
+                var formContent = new FormUrlEncodedContent(new[]
+                {
+                    new KeyValuePair<string,string>("grant_type","refresh_token"),
+                    new KeyValuePair<string, string>("client_id",Constants.ClientID),
+                    new KeyValuePair<string, string>("refresh_token",refreshToken)
+                });
+                var postResponse = await client.PostAsync(uri, formContent).ConfigureAwait(false);
+                postResponse.EnsureSuccessStatusCode();
 
+                string response = await postResponse.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<TokenResponseModel>(response);
+            }
+        }
 
         
     }

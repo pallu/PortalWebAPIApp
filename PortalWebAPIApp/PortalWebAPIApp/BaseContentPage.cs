@@ -27,6 +27,7 @@ namespace PortalWebAPIApp
 
             //check if keystore or keychain content exists
             var loginExists = DependencyService.Get<ILoginStoreService>().LoginExists();
+
             if (!App.IsLoggedIn)
             {
                 Navigation.PushModalAsync(new LoginPage());

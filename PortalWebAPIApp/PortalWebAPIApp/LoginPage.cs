@@ -86,7 +86,8 @@ namespace PortalWebAPIApp
             AccountsService aService = new AccountsService();
             var tokenResponseTask = aService.Login(entryUserName.Text, entryPassword.Text);
             var tokenResponse = tokenResponseTask.Result;
-            App.SaveToken(tokenResponse.AccessToken);
+            //App.SaveToken(tokenResponse.AccessToken);
+            App.SaveTokenResponseModel(tokenResponse);
             DependencyService.Get<ILoginStoreService>().SaveLogin(tokenResponse);
             if (LoggedIn != null)
             {
