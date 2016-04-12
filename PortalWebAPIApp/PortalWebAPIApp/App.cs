@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PortalWebAPIApp.services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -69,6 +70,11 @@ namespace PortalWebAPIApp
         protected override void OnStart()
         {
             // Handle when your app starts
+            var trm = DependencyService.Get<ILoginStoreService>().GetToken();
+            if(trm!=null)
+            {
+                App.SaveToken(trm.AccessToken);
+            }
         }
 
         protected override void OnSleep()

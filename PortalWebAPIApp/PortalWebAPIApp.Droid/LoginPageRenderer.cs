@@ -36,33 +36,17 @@ namespace PortalWebAPIApp.Droid
 
         }
 
-        private void LoginPage_LoginButtonClicked(object sender, LoginEventArgs e)
-        {
-            //throw new NotImplementedException();
-            var oAuthServerConfiguration = new OAuthServerConfiguration(
-                new Uri(PortalWebAPIApp.Constants.BaseAddress),
-                new Uri("/token",UriKind.Relative),
-                PortalWebAPIApp.Constants.ClientID,
-                "dummy"
-                );
-            var accessTokenClient = new AccessTokenClient(oAuthServerConfiguration);
-
-            var userAccessTokenTask = accessTokenClient.GetUserAccessToken(e.UserName, e.Password, "dummy");
-            var userAccessToken = userAccessTokenTask.Result;
-
-            string serviceID = this.Context.ApplicationInfo.LoadLabel(this.Context.PackageManager);
-            Account acc = new Account(e.UserName);
-            AccountStore.Create(this.Context).Save(acc, serviceID);
-            App.SaveToken(userAccessToken.Token);
-        }
-
+        
         private void Q_LoggedIn(object sender, models.TokenResponseModel e)
         {
-            string serviceID = this.Context.ApplicationInfo.LoadLabel(this.Context.PackageManager);
-            Account acc = new Account(e.UserName);
-            acc.Properties.Add("TokenResponseResult", UtilityService.SerializeJson(e));
-            AccountStore.Create(this.Context).Save(acc, serviceID);
-            App.SaveToken(e.AccessToken);
+            //moved to AccountService with dependency injection
+
+            //string serviceID = this.Context.ApplicationInfo.LoadLabel(this.Context.PackageManager);
+            //Account acc = new Account(e.UserName);
+            //acc.Properties.Add("TokenResponseResult", UtilityService.SerializeJson(e));
+            //AccountStore.Create(this.Context).Save(acc, serviceID);
+            ////App.SaveToken(e.AccessToken);
+
         }
 
         
